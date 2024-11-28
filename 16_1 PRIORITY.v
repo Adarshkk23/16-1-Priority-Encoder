@@ -1,12 +1,35 @@
-module mux16_1_st(in,s,y);
-input [15:0]in;
-input[3:0]s;
-output y;
-wire [3:0]t;
-mux4_1_st mux4x1_1(in[3:0],s[1:0],t[0]);
-mux4_1_st mux4x1_2(in[7:4],s[1:0],t[1]);
-mux4_1_st mux4x1_3(in[11:8],s[1:0],t[2]);
-mux4_1_st mux4x1_4(in[15:12],s[1:0],t[3]);
-mux4_1_st mux4x1_5(t,s[3:2],y);
+module boolean_expression (
+    input wire [15:0] D,  // 16 input signals: D[0] to D[15]
+    output reg [3:0] Y    // 4-bit output register: Y[3:0]
+);
+
+    // Always block to compute the output Y based on input D
+    always @(*) begin
+        // Y[0] expression (corresponds to the image)
+        Y[0] = ((~D[14] & ~D[12] & ~D[10] & ~D[8] &
+                 ((~D[6] & ~D[4] & ~D[2] & D[1]) |
+                  (D[6] & D[4] & D[3]) |
+                  (D[6] & D[5] & D[7]))) |
+                (~D[14] & ~D[12] & ((~D[10] & D[9]) | D[11])) |
+                (~D[14] & D[13] & D[15]));
+
+        // Y[1] expression
+        Y[1] = ((~D[13] & ~D[12] & ~D[9] & ~D[8] &
+                 ((D[5] & D[4] & D[2]) |
+                  (~D[5] & D[4] & D[3]) |
+                  (D[6] & D[7]))) |
+                (~D[13] & ~D[12] & (D[10] | D[11])) |
+                (D[14] & D[15]));
+
+        // Y[2] expression
+        Y[2] = ((~D[11] & ~D[10] & ~D[9] & ~D[8] &
+                 ((D[4] & ~D[5]) |
+                  (D[6] & D[7]))) |
+                (D[12] & D[13] & D[14] & D[15]));
+
+        // Y[3] expression
+        Y[3] = (D[8] | D[9] | D[10] | D[11] | D[12] | D[13] | D[14] | D[15]);
+    end
+
 endmodule
 

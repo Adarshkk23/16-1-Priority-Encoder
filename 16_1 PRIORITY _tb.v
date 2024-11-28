@@ -1,6 +1,5 @@
-// Testbench for 16:1 Multiplexer
 
-endmodule
+
 `timescale 1ns / 1ps
 
 module boolean_expression_tb;
